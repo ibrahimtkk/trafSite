@@ -1,0 +1,141 @@
+{% load static %}
+
+{# Ana sayfa #}
+
+<!doctype html>
+<html>
+    <head>
+         <title>Trafik Nerede</title>
+         <script src="{% static 'JS/jquery-3.3.1.js' %}"></script>
+		 <link rel="stylesheet" href="{% static 'CSS/dizayn_home2.css' %}">
+		 <link rel="icon" href="{% static 'ICO/if_traffic-light_27268.ico' %}" type="image/x-icon"/>
+		 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+		 <link id="bsdp-css" href="bootstrap-datepicker/css/bootstrap-datepicker3.css" rel="stylesheet">
+		 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+		 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+		 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+		 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    </head>
+	<body>
+		<button class="sec2" type="submit" onClick="location.href='analiz'"
+		value="Submit"><img src="{% static 'ICO/if_chart_514935.ico' %}" width="30%" height=30% alt=""/><b><font size="4">Analiz</font></b></button>
+		<button class="sec3" type="submit" onClick="location.href='tahmin'"
+		value="Submit"><img src="{% static 'ICO/if_Research-magnify-graph-report-analysis_2992652.ico' %}" width="30%" height="25%" alt=""/><b><font size="4">Tahmin</font></b></button>
+		<button class="sec4" type="submit" onClick="location.href='stdevi'"
+		value="Submit"><img src="{% static 'ICO/standart-Sapma.ico' %}" width="30%" height=30% alt=""/><b><font size="4">Standart Sapma</font></b></button><br/><br/>
+
+
+		<!-- Centered Tabs -->
+	<div id="exTab1" class="container">
+		<ul class="nav nav-tabs">
+			<li class="active"><a data-toggle="tab" href="#analiz">Analiz</a></li>
+			<li><a data-toggle="tab" href="#tahmin">Tahmin</a></li>
+		</ul>
+
+			<ul class="nav nav-pills" id="analiz" role="tablist">
+				<h3>Menu 1</h3>
+				<p>Some content in menu 1.</p>
+				<li class="nav-item">
+					<a class="nav-link" id="pills-tumGun-tab" data-toggle="pill" href="#tumGun" aria-controls="tumGun" aria-selected="true">Tüm Gün</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="pills-belirliSaat-tab" data-toggle="pill" href="#belirliSaat" aria-controls="belirliSaat" aria-selected="true">Belirli Saat</a></li>
+				<li class="nav-item">
+					<a class="nav-link" id="pills-belirliAralik-tab" data-toggle="pill" href="#belirliAralik">Belirli Aralık</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="pills-standartSapma-tab" data-toggle="pill" href="#standartSapma">Standart Sapma</a>
+				</li>
+			</ul>
+
+
+			<div id="tahmin" class="tab-pane fade">
+				<h3>Menu 1</h3>
+				<p>Some content in menu 1.</p>
+				<h3>Menu 1</h3>
+				<p>Some content in menu 1.</p>
+				<h3>Menu 1</h3>
+				<p>Some content in menu 1.</p>
+			</div>
+		
+		<div class="nav-content">
+			
+				<div id="tumGun" class="tab-pane fade" role="tabpanel" aria-labelledby="pills-tumGun-tab">
+					<form>
+						<div class="form-row">
+							<div class="from-group col-md-3">
+								<label for="formvSegID">vSegID</label>
+								<input type="text" class="form-control" id="FormvSegID" placeholder="vSegID">
+							</div>
+							<div class="from-group col-md-3">
+								<label for="formvSegDir">vSegDir</label>
+								<input type="text" class="form-control" id="FormvSegDir" placeholder="vSegDir">
+							</div>
+						</div>
+					</form>
+					<br></br><br></br>
+
+					<div class="col-md-3">
+						<label for="yokBegenGecTarih">Tarih</label>
+						<input id="datepicker" placeholder="11/01/2017">
+					</div>
+					<script>
+						$(document).ready(function() {
+							$( "#datepicker" ).datepicker();
+						} );
+					</script>
+				</div>
+
+
+				<div id="belirliSaat" class="tab-pane fade" role="tabpanel" aria-labelledby="pills-belirliSaat-tab">
+					<form>
+						<div class="form-row">
+							<div class="from-group col-md-3">
+								<label for="formvSegID">mesela</label>
+								<input type="text" class="form-control" id="FormvSegID" placeholder="vSegID">
+							</div>
+							<div class="from-group col-md-3">
+								<label for="formvSegDir">yani</label>
+								<input type="text" class="form-control" id="FormvSegDir" placeholder="vSegDir">
+							</div>
+						</div>
+					</form>
+					<br></br><br></br>
+
+					<div class="col-md-3">
+						<label for="yokBegenGecTarih">Tarih</label>
+						<input id="datepicker" placeholder="11/01/2017">
+					</div>
+					<script>
+						$(document).ready(function() {
+							$( "#datepicker" ).datepicker();
+						} );
+					</script>
+				</div>
+
+
+		</div>
+	</div>
+
+
+	<!--
+		<input class="button-success" type="submit" value="Onayla" />
+		<input class="form" type="reset" value="Formu Sıfırla"/>
+	-->
+
+<!-- Centered Pills -->
+<!--
+	<ul class="nav nav-pills nav-justified">
+	  <li class="active"><a href="#">Home</a></li>
+	  <li><a href="#">Menu 1</a></li>
+	  <li><a href="#">Menu 2</a></li>
+	  <li><a href="#">Menu 3</a></li>
+</ul>
+-->
+
+	</body>
+
+</html>
