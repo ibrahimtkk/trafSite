@@ -1,0 +1,83 @@
+/* CSS */
+button img {
+  margin-bottom: 3px;
+  margin-right: 1px;
+  vertical-align: middle;
+}
+
+.sec1{
+	width:26%;
+	height:30%
+
+ }
+
+.sec2{
+	width:26%;
+	height:30%
+
+ }
+ .sec3{
+	width:26%;
+	height:30%
+
+ }
+ .sec4{
+	width:26%;
+	height:30%
+
+ }
+
+#exTab1 .nav-pills > li > a {
+	border-radius: 4px 4px 4px 4px;
+}
+
+#exTab1 .tab-content {
+  color : #171a1d;
+  padding : 5px 15px;
+}
+
+#exTab1 .nav-tabs{
+	width: 441px;
+	padding: 5px 15px;
+}
+
+#exTab1 .nav-tabs > li > a{
+	width: 203.5px;
+}
+
+#exTab1 #tumGun {
+	padding: 25px 0px;
+}
+
+#exTab1 #tarihRow{
+	padding: 15px 15px;
+}
+
+button img {
+  margin-bottom: 3px;
+  margin-right: 1px;
+  vertical-align: middle;
+}
+
+* html button { width: 90px; }
+
+ .button-success {
+	color: white;
+	border-radius: 4px;
+    background: rgb(28, 184, 65); /* this is a green */
+	width:100px;
+	height: 30px;
+
+ }
+ .form {
+	color: white;
+	border-radius: 4px;
+    background: rgb(202, 60, 60); /* this is a maroon */
+	width:100px;
+	height: 30px;
+ }
+
+ #belirliSaatRow {
+	 padding-left: 14px;
+	 padding-top: 15px;
+ }
