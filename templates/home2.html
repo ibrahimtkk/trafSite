@@ -1,0 +1,322 @@
+{% load static %}
+
+{# Ana sayfa #}
+
+<!doctype html>
+<html>
+    <head>
+         <title>Trafik Nerede</title>
+		 <link rel="stylesheet" href="{% static 'CSS/dizayn_home2.css' %}">
+		 <link rel="icon" href="{% static 'ICO/if_traffic-light_27268.ico' %}" type="image/x-icon"/>
+         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+         <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/>
+         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    </head>
+    <body>
+        <script>
+            $("ul.nav-tabs a").click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+        </script>
+
+        <h1 class="text-center">Merhaba Bootstrap</h1>
+
+
+        <div id="exTab1" class="container">
+            <div class="tabbable boxed parentTabs">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a data-toggle="tab" href="#analiz">Analiz</a>
+                    </li>
+                    <li>
+                        <a data-toggle="tab" href="#tahmin">Tahmin</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane fade active in" id="analiz">
+                        <div class="tabbable">
+                            <ul class="nav nav-pills">
+                                <li class="active">
+                                    <a data-toggle="tab" href="#tumGun">Tum Gun</a>
+                                </li>
+                                <li>
+                                    <a data-toggle="tab" href="#belirliSaat">Belirli Saat</a>
+                                </li>
+                                <li>
+                                    <a data-toggle="tab" href="#belirliAralik">Belirli Aralik</a>
+                                </li>
+                                <li>
+                                    <a data-toggle="tab" href="#standartSapma">Standart Sapma</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane fade active in" id="tumGun">
+
+                                    <form action="harita/" method="POST">
+                                        {%  csrf_token %}
+                                        <fieldset>
+                                            <div class="form-row">
+                                                <div class=" col-md-3">
+                                                    <label for="formvSegID">vSegID</label>
+                                                    <input type="text" class="form-control" name="vSegID" id="vSegID" placeholder="vSegID">
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="formvSegDir">vSegDir</label>
+                                                    <input type="text" class="form-control" name="vSegDir" id="vSegDir" placeholder="vSegDir">
+                                                </div>
+                                            </div>
+
+                                            <br></br><br></br>
+                                            <div class="row" id="tarihRow">
+                                                <div class="col-md-3">
+                                                    <label for="yokBegenGecTarih">Tarih</label>
+                                                    <input type="text" class="form-control" id="datepicker1">
+                                                </div>
+                                                <script type="text/javascript">
+                                                    $(function () {
+                                                        $('#datepicker1').datepicker();
+                                                    });
+                                                </script>
+                                            </div>
+                                            <input class="button-success" type="submit" value="Onayla" />
+		                                    <input class="form" type="reset" value="Formu Sıfırla"/>
+                                        </fieldset>
+                                    </form>
+
+                                </div>
+                                <div class="tab-pane fade" id="belirliSaat">
+                                    <p>Belirli Saat</p>
+                                </div>
+                                <div class="tab-pane fade" id="belirliAralik">
+                                    <p>Belirli Aralik</p>
+                                </div>
+                                <div class="tab-pane fade" id="standartSapma">
+                                    <p>Standart Sapma</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tahmin">
+                        <div class="tabbable">
+                            <ul class="nav nav-tabs">
+                                <li class="active">
+                                    <a data-toggle="tab" href="#sub21">Tab2.1</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane fade active in" id="sub21">
+                                    <p>Tab 2.1</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </body>
+                <!--
+                        <div id="analiz" class="tab-pane fade">
+                            <ul class="nav nav-pills" id="analizPill">
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-tumGun" data-toggle="pill" href="#tumGun"></a>
+                                    <div id="tumGun" class="tab-pane fade">
+                                        Ekrana yaz
+                                    </div>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-belirliSaat" data-toggle="pill" href="#belirliSaat"></a>
+                                    <div id="belirliSaat" class="tab-pane fade">
+                                        Ekrana yazma 2
+                                    </div>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-belirliAralik" data-toggle="pill" href="belirliAralik"></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="pills-standartSapma" data-toggle="pill" href="standartSapma"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                <li>
+                        <a data-toggle="tab" href="#tahmin">Tahmin</a>
+                    </li>
+
+                </ul>
+            </div>
+            -->
+
+
+
+
+
+
+
+
+
+
+		<!--
+		<button class="sec2" type="submit" onClick="location.href='analiz'"
+		value="Submit"><img src="{% static 'ICO/if_chart_514935.ico' %}" width="30%" height=30% alt=""/><b><font size="4">Analiz</font></b></button>
+		<button class="sec3" type="submit" onClick="location.href='tahmin'"
+		value="Submit"><img src="{% static 'ICO/if_Research-magnify-graph-report-analysis_2992652.ico' %}" width="30%" height="25%" alt=""/><b><font size="4">Tahmin</font></b></button>
+		<button class="sec4" type="submit" onClick="location.href='stdevi'"
+		value="Submit"><img src="{% static 'ICO/standart-Sapma.ico' %}" width="30%" height=30% alt=""/><b><font size="4">Standart Sapma</font></b></button><br/><br/>
+
+
+		<div id="exTab1" class="container">
+		<ul class="nav nav-tabs">
+			<li class="active"><a data-toggle="tab" href="#analiz">Analiz</a></li>
+			<li><a data-toggle="tab" href="#tahmin">Tahmin</a></li>
+		</ul>
+
+			
+
+			<div id="analiz" class="tab-pane fade">
+				<script type="text/javascript">
+					$(document).ready(function(){
+						$()
+					}
+						)
+				</script>
+				<ul class="nav nav-pills" id="analiz" role="tablist">
+					<h3>Menu 1</h3>
+					<p>Some content in menu 1.</p>
+					<li class="nav-item">
+						<a class="nav-link" id="pills-tumGun-tab" data-toggle="pill" href="#tumGun" aria-controls="tumGun" aria-selected="true">Tüm Gün</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" id="pills-belirliSaat-tab" data-toggle="pill" href="#belirliSaat" aria-controls="belirliSaat" aria-selected="true">Belirli Saat</a></li>
+					<li class="nav-item">
+						<a class="nav-link" id="pills-belirliAralik-tab" data-toggle="pill" href="#belirliAralik">Belirli Aralık</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" id="pills-standartSapma-tab" data-toggle="pill" href="#standartSapma">Standart Sapma</a>
+					</li>
+				</ul>
+				<div class="nav-content">
+				
+					<div id="tumGun" class="tab-pane fade" role="tabpanel" aria-labelledby="pills-tumGun-tab">
+						<form>
+							<div class="form-row">
+								<div class="from-group col-md-3">
+									<label for="formvSegID">vSegID</label>
+									<input type="text" class="form-control" id="FormvSegID" placeholder="vSegID">
+								</div>
+								<div class="from-group col-md-3">
+									<label for="formvSegDir">vSegDir</label>
+									<input type="text" class="form-control" id="FormvSegDir" placeholder="vSegDir">
+								</div>
+								<br></br><br></br>
+								<div class="col-md-3">
+									<label for="yokBegenGecTarih">Tarih</label>
+									<input id="datepicker" placeholder="11/01/2017">
+								</div>
+							</div>
+						</form>
+						<br></br><br></br>
+
+						
+						<script>
+							$(document).ready(function() {
+								$( "#datepicker" ).datepicker();
+							} );
+						</script>
+					</div>
+
+
+					<div id="belirliSaat" class="tab-pane fade" role="tabpanel" aria-labelledby="pills-belirliSaat-tab">
+						<form>
+							<div class="form-row">
+								<div class="from-group col-md-3">
+									<label for="formvSegID">mesela</label>
+									<input type="text" class="form-control" id="FormvSegID" placeholder="vSegID">
+								</div>
+								<div class="from-group col-md-3">
+									<label for="formvSegDir">yani</label>
+									<input type="text" class="form-control" id="FormvSegDir" placeholder="vSegDir">
+								</div>
+							</div>
+						</form>
+						<br></br><br></br>
+
+						<div class="col-md-3">
+							<label for="yokBegenGecTarih">Tarih</label>
+							<input id="datepicker" placeholder="11/01/2017">
+						</div>
+						<script>
+							$(document).ready(function() {
+								$( "#datepicker" ).datepicker();
+							} );
+						</script>
+					</div>
+				</div>
+			</div>
+
+
+			<div id="tahmin" class="tab-pane fade">
+				<h3>Menu 1</h3>
+				<p>Some content in menu 1.</p>
+				<h3>Menu 1</h3>
+				<p>Some content in menu 1.</p>
+				<h3>Menu 1</h3>
+				<p>Some content in menu 1.</p>
+			</div>
+		
+		<div id="belirliAralik" class="tab-pane fade show active" role="tabpanel" aria-labelledby="pills-belirliAralik-tab">
+			<form>
+				<div class="form-row">
+					<div class="from-group col-md-3">
+						<label for="formvSegID">mesela</label>
+						<input type="text" class="form-control" id="FormvSegID" placeholder="vSegID">
+					</div>
+					<div class="from-group col-md-3">
+						<label for="formvSegDir">yani</label>
+						<input type="text" class="form-control" id="FormvSegDir" placeholder="vSegDir">
+					</div>
+				</div>
+			</form>
+			<br></br><br></br>
+
+			<div class="col-md-3">
+				<label for="yokBegenGecTarih">Tarih</label>
+				<input id="datepicker" placeholder="11/01/2017">
+			</div>
+			<script>
+				$(document).ready(function() {
+					$( "#datepicker" ).datepicker();
+				} );
+			</script>
+		</div>
+
+
+		
+	</div>
+    -->
+
+	<!--
+		<input class="button-success" type="submit" value="Onayla" />
+		<input class="form" type="reset" value="Formu Sıfırla"/>
+	-->
+
+<!-- Centered Pills -->
+<!--
+	<ul class="nav nav-pills nav-justified">
+	  <li class="active"><a href="#">Home</a></li>
+	  <li><a href="#">Menu 1</a></li>
+	  <li><a href="#">Menu 2</a></li>
+	  <li><a href="#">Menu 3</a></li>
+</ul>
+-->
+
+
+
+
+</html>
