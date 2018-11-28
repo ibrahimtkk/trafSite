@@ -1,0 +1,42 @@
+{% load static %}
+
+{# benim eski analizdeki ana sayfa ekranı #}
+
+<!doctype html>
+<html>
+	<head>
+		<title> HTML Öğrenmeye Çalışıyorum </title>
+		<link rel="stylesheet" href="{% static 'CSS/guesstraf.css' %}">
+	</head>
+	<body>
+		<h1> Internet aleminin kıytırıktan bir siteciği </h1>
+
+
+		<form action="grafikler/" method="POST">
+            {%  csrf_token %}
+
+			<input type="text" id="year" name="year" placeholder="Yıl..">
+			<br></br>
+
+
+		    <input type="text" id="month" name="month" placeholder="Ay..">
+		    <br></br>
+
+
+		    <input type="text" id="day" name="day" placeholder="gun..">
+		    <br></br>
+
+
+		    <input type="text" id="sensor" name="sensor" placeholder="sensör..">
+		    <br></br>
+
+
+		    <input type="text" id="vSegDir" name="vSegDir" placeholder="yön..">
+		    <br></br>
+
+            {#  <button class="button" onclick="location.href='/analiz/grafikler'" type="button" name="giris">Giriş</button>  #}
+
+			 <input type="submit" class="button" value="button" name="giris">
+		</form>
+	</body>
+</html>
