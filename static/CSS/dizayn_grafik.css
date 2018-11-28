@@ -1,0 +1,19 @@
+/* CSS */
+button img {
+  margin-bottom: 3px;
+  margin-right: 1px;
+  vertical-align: middle;
+}
+
+* html button { width: 90px; }
+
+.sec2{
+	width:20%;	
+	height:30%;
+	 
+ }
+ .home{
+	width:20%;	
+	height:80%;
+	 
+ }
