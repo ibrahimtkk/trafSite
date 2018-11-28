@@ -1,0 +1,93 @@
+{% load static %}
+
+{# sensör no, yön, yıl ve ay seçtiğimiz analiz kriterlerini girdiğimiz ekran #}
+
+<!doctype html>
+<html>
+    <head>
+        <title>Standart Sapma</title>
+        <link rel="stylesheet" href="{% static 'CSS/dizayn_analiz2.css' %}">
+        <link rel="icon" href="{% static 'ICO/standart-Sapma.ico' %}" type="image/x-icon"/>
+        <script src="{% static 'JS/script.js' %}"></script>
+    </head>
+	<body>
+	<button class="btnExample" type="submit" onClick="location.href='../'"
+	value="Submit"><img src="{% static 'ICO/if_Location_08_1530086.ico' %}" width="30" height="25" alt=""/><b><font size="2">Anasayfa</font></b></button><br/><br/>
+		<form action="harita/" method="POST">
+            {%  csrf_token %}
+			<fieldset>
+				<legend id="trafikSorguLegend">Trafik Sorgu</legend>
+
+				<label class="labels" id="vSegDirLabel">Sensör Yönü:</label>
+				<select class="secim" name="vSegDir" id="vSegDir">
+					<option>Seçiniz..</option>
+					<option>0</option>
+					<option>1</option>
+				</select><br/><br/>
+				
+				<label class="labels" id="yearLabel" >Yıl:</label>
+				<select class="secim" name="year" id="year">
+					<option>Seçiniz..</option>
+					<option>2016</option>
+					<option>2017</option>
+				</select><br/><br/>
+				
+				<label class="labels" id="monthLabel">Ay:</label>
+				<select class="secim" name="month" id="month">
+					<option>Seçiniz..</option>
+					<option>1</option>
+					<option>2</option>
+					<option>3</option>
+					<option>4</option>
+					<option>5</option>
+					<option>6</option>
+					<option>7</option>
+					<option>8</option>
+					<option>9</option>
+					<option>10</option>
+					<option>11</option>
+					<option>12</option>
+				</select><br/><br/>
+
+                <label class="labels" id="dayLabel">Gün:</label>
+                <select class="secim" name="day" id="day">
+                    <option>Seçiniz..</option>
+					<option>1</option>
+					<option>2</option>
+					<option>3</option>
+					<option>4</option>
+					<option>5</option>
+					<option>6</option>
+					<option>7</option><br/><br/>
+					<option>8</option>
+					<option>9</option>
+					<option>10</option>
+					<option>11</option>
+					<option>12</option>
+				  	<option>13</option>
+				  	<option>14</option> <br/><br/>
+					<option>15</option>
+					<option>16</option>
+					<option>17</option>
+  					<option>18</option>
+					<option>19</option>
+					<option>20</option>
+					<option>21</option> <br/><br/>
+					<option>22</option>
+					<option>23</option>
+					<option>24</option>
+					<option>25</option>
+					<option>26</option>
+					<option>27</option>
+					<option>28</option> <br/><br/>
+					<option>29</option>
+					<option>30</option>
+					<option>31</option>
+                </select><br/><br/>
+				
+
+				<input class="button-success" type="submit" value="Onayla" />
+				<input class="form" type="reset" value="Formu Sıfırla"/>
+			</fieldset>
+		</form>
+</html>

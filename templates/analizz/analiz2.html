@@ -1,0 +1,255 @@
+{% load static %}
+
+{# sensör no, yön, yıl ve ay seçtiğimiz analiz kriterlerini girdiğimiz ekran #}
+
+<!doctype html>
+<html>
+    <head>
+        <title>Analiz</title>
+        <link rel="stylesheet" href="{% static 'CSS/dizayn_analiz2.css' %}">
+        <link rel="icon" href="{% static 'ICO/if_chart_514935.ico' %}" type="image/x-icon"/>
+        <script src="{% static 'JS/script.js' %}"></script>
+        <script src="{% static 'JS/jquery-3.3.1.js' %}"></script>
+        <!--  <script src="{% static 'KML/docu.kml' %}"></script>  -->
+        <script>
+	    	/*
+	    	var map;
+	    	function initMap() {
+	    		map = new google.maps.Map(document.getElementById('map'), {
+		        	center: new google.maps.LatLng(41.0082, 28.9784),
+			        zoom: 12,
+			        mapTypeId: 'terrain'
+	        	});
+			*/
+
+	        	/*var icon = {
+				    url: "C:\\Users\\ibrahim\\Desktop\\trafSite\\icon.png", // url
+				    scaledSize: new google.maps.Size(50, 50), // scaled size
+				    origin: new google.maps.Point(0,0), // origin
+				    anchor: new google.maps.Point(0, 0) // anchor
+				};*/
+				/*var kmlLayer = new google.maps.KmlLayer('https://www.dropbox.com/s/q4539mtu14whgkm/doc.kml?dl=0', {
+					suppressInfoWindows: true,
+					preserveViewport: false,
+					map: map
+			    });*/
+				/*
+				var locations = [
+			      	['e', 32.715736, -117.161087, 4],
+			      	['d', 32.723036, -117.259052, 5],
+			      	['c', 32.738249, -117.157507, 3],
+			      	['b', 32.740101, -117.157478, 2],
+			      	['a', 32.750198, -117.259302, 1]
+			    ];
+			    */
+
+			    /*
+			    {% for all in allOf %}
+			    	var marker = new google.maps.Marker({
+			    		position: new google.maps.LatLng( {{ all.2 }}, {{ all.1 }} ),
+			    		map: map,
+			    		//icon: icon
+			    	});
+			    {% endfor %}
+			    */
+
+			    /*
+			    for (i = 0; i < locations.length; i++) {  
+			    	marker = new google.maps.Marker({
+			    		position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+			    		map: map
+			      	});
+			    }
+			    */
+				
+				/*var marker = new google.maps.Marker({
+		        	position: {lat: 32.715736, lng: -117.161087},
+		        	map: map,
+		        	title: 'Hello World!'
+		        });*/
+
+				//kmlLayer.setMap(map);
+	    	//}
+	    </script>
+	    <!--
+	        <script async defer
+	    		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAiLaYpd0zx4HfjULaOVcgxVpQMuKNmD04&callback=initMap">
+	    	</script>
+    	-->
+    </head>
+	<body>
+	<button class="btnExample" type="submit" onClick="location.href='../'"
+	value="Submit"><img src="{% static 'ICO/if_Location_08_1530086.ico' %}" width="30" height="25" alt=""/><b><font size="2">Anasayfa</font></b></button><br/><br/>
+		<form action="grafikler/" method="POST">
+            {%  csrf_token %}
+			<fieldset>
+				<legend id="trafikSorguLegend">Trafik Sorgu</legend>
+				
+				<!--
+					<div id="map"></div>
+					<div id="capture"></div>
+
+
+					<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+					<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+				-->
+				<label class="labels" id="aramaTurleriLabel">Arama Türü:</label>
+				<select class="secim" id="aramaTurleri">
+					<option>Seçiniz..</option>
+					<option>Tüm Gün</option>
+					<option>Belirli Saat</option>
+					<option>Günün Belirli Aralıkları</option>
+                    <option>0</option>
+				</select><br/><br/>
+
+
+                <label class="labels" id="vSegIDLabel">Sensör No: </label>
+				<select class="secim" name="vSegID" id="vSegID">
+					<option>Seçiniz..</option>
+					<option>443</option>
+					<option>471</option>
+				</select><br/><br/>
+				
+				<label class="labels" id="vSegDirLabel">Sensör Yönü:</label>
+				<select class="secim" name="vSegDir" id="vSegDir">
+					<option>Seçiniz..</option>
+					<option>0</option>
+					<option>1</option>
+				</select><br/><br/>
+				
+				<label class="labels" id="yearLabel" >Yıl:</label>
+				<select class="secim" name="year" id="year">
+					<option>Seçiniz..</option>
+					<option>2016</option>
+					<option>2017</option>
+					</select><br/><br/>
+				
+				<label class="labels" id="monthLabel">Ay:</label>
+				<select class="secim" name="month" id="month">
+					<option>Seçiniz..</option>
+					<option>Ocak</option>
+					<option>Şubat</option>
+					<option>Mart</option>
+					<option>Nisan</option>
+					<option>Mayıs</option>
+					<option>Haziran</option>
+					<option>Temmuz</option>
+					<option>Ağustos</option>
+					<option>Eylül</option>
+					<option>Ekim</option>
+					<option>Kasım</option>
+					<option>Aralık</option>
+				</select><br/><br/>
+
+                <label class="labels" id="dayLabel">Gün:</label>
+                <select class="secim" name="day" id="day">
+                    <option>Seçiniz..</option>
+					<option>1</option>
+					<option>2</option>
+					<option>3</option>
+					<option>4</option>
+					<option>5</option>
+					<option>6</option>
+					<option>7</option><br/><br/>
+					<option>8</option>
+					<option>9</option>
+					<option>10</option>
+					<option>11</option>
+					<option>12</option>
+				  	<option>13</option>
+				  	<option>14</option> <br/><br/>
+					<option>15</option>
+					<option>16</option>
+					<option>17</option>
+  					<option>18</option>
+					<option>19</option>
+					<option>20</option>
+					<option>21</option> <br/><br/>
+					<option>22</option>
+					<option>23</option>
+					<option>24</option>
+					<option>25</option>
+					<option>26</option>
+					<option>27</option>
+					<option>28</option> <br/><br/>
+					<option>29</option>
+					<option>30</option>
+					<option>31</option>
+                </select><br/><br/>
+
+                <label class="labels" id="startClockLabel">Baş Saat:</label>
+                <select class="secim" name="startClock" id="startClock">
+                    <option>Seçiniz..</option>
+					<option>0</option>
+                    <option>1</option>
+					<option>2</option>
+					<option>3</option>
+					<option>4</option>
+					<option>5</option>
+					<option>6</option>
+					<option>7</option><br/><br/>
+					<option>8</option>
+					<option>9</option>
+					<option>10</option>
+					<option>11</option>
+					<option>12</option>
+				  	<option>13</option>
+				  	<option>14</option> <br/><br/>
+					<option>15</option>
+					<option>16</option>
+					<option>17</option>
+  					<option>18</option>
+					<option>19</option>
+					<option>20</option>
+					<option>21</option> <br/><br/>
+					<option>22</option>
+					<option>23</option>
+                </select><br/><br/>
+
+                <label class="labels" id="endClockLabel">Bit Saat:</label>
+                <select class="secim" name="endClock" id="endClock">
+                    <option>Seçiniz..</option>
+					<option>0</option>
+                    <option>1</option>
+					<option>2</option>
+					<option>3</option>
+					<option>4</option>
+					<option>5</option>
+					<option>6</option>
+					<option>7</option><br/><br/>
+					<option>8</option>
+					<option>9</option>
+					<option>10</option>
+					<option>11</option>
+					<option>12</option>
+				  	<option>13</option>
+				  	<option>14</option> <br/><br/>
+					<option>15</option>
+					<option>16</option>
+					<option>17</option>
+  					<option>18</option>
+					<option>19</option>
+					<option>20</option>
+					<option>21</option> <br/><br/>
+					<option>22</option>
+					<option>23</option>
+                </select><br/><br/>
+
+                <label class="labels" id="aralikLabel">Zaman Dilimleri:</label>
+                <select class="secim" name="aralik" id="aralik">
+                    <option>Seçiniz..</option>
+					<option>00:00 - 07:00</option>
+                    <option>İş Giriş</option>
+					<option>Öğle</option>
+					<option>İş Çıkış</option>
+					<option>Gece</option>
+                </select><br/><br/>
+				
+
+				
+
+				<input class="button-success" type="submit" value="Onayla" />
+				<input class="form" type="reset" value="Formu Sıfırla"/>
+			</fieldset>
+		</form>
+</html>
