@@ -1,0 +1,51 @@
+.secim {
+	background: white;
+	margin-right: 100%;
+    border: 1px solid #26487f;
+    border-radius: 1px;
+    color: black;
+    outline: 1px solid #fff;
+    padding: 6px 10px;
+	width:15%;
+}
+/* CSS */
+button img {
+  margin-bottom: 3px;
+  margin-right: 1px;
+  vertical-align: middle;
+}
+ 
+* html button { width: 90px; }
+
+ .button-success {
+	color: white;
+	border-radius: 4px;
+    background: rgb(28, 184, 65); /* this is a green */
+	width:100px;
+	height: 30px;
+	
+ }
+ .form {
+	color: white;
+	border-radius: 4px;
+    background: rgb(202, 60, 60); /* this is a maroon */
+	width:100px;
+	height: 30px;
+ }
+ 
+#map {
+       height: 500px;
+       width: 700px;
+       overflow: hidden;
+       float: left;
+       border: thin solid #333;
+}
+/*#capture {
+       height: 360px;
+       width: 480px;
+       overflow: hidden;
+       float: left;
+       background-color: #ECECFB;
+       border: thin solid #333;
+       border-left: none;
+}*/
