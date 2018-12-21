@@ -1,0 +1,15 @@
++ Python üzerinden adres alma iþlemini sunucuya yaptýr.
+
++ Sunucudan yapýlan adres alma iþleminin çýktýlarýný dosyaya kaydet.
+
++ Ekrana yazdýrýlacak adresleri dosyadan oku, böylece her seferinde adres alma iþlemi ve hatasý ile karþýlaþma.
+
+-+ Her ayýn 15'i için belli bir havuz oluþtur ve kullanýcý tarih girdiðinde beklemeden hemen karþýsýna harita çýksýn.
+
+- Harita üzerinde en yüksek standart sapmaya sahip ilk 20 lokasyon çýkýyor, ilk 100 lokasyonu ekranýn sað tarafýna yazdýr.
+
+- Mümkünse standart sapma sýralamasýndaki numarasýný pin üzerinde göster, böylece sýralamadaki yerini öðrenmek için pin'in üzerine gelmek zorunda kalma.
+
+- Renklendirme çalýþmasýna baþla.
+
+- Çýktý ekranýndaki açýklama satýrlarýný düzenle. Yapabiliyorsan iþlemin yüzde kaçýný yaptýðýný ekrana yazdýr(Abdulkadir hocanýn söylediði bir kütüphane vardý, onu kullanabilirsin).
