@@ -1,0 +1,272 @@
+{% load static %}
+
+{# Renkli harita #}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Directions Service</title>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #floating-panel {
+        position: absolute;
+        top: 10px;
+        left: 25%;
+        z-index: 5;
+        background-color: #00aa88;
+        padding: 5px;
+        border: 1px solid #491217;
+        text-align: center;
+        font-family: 'Roboto','sans-serif';
+        line-height: 30px;
+        padding-left: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      function initMap() {
+        var directionsService = new google.maps.DirectionsService;
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 11,
+            center: {lat: 41.0082, lng: 28.9784}
+        });
+        var directionsDisplay = new google.maps.DirectionsRenderer;
+        directionsDisplay.setMap(map);
+        var kucuk;
+        var myRoutes = [];
+        var myOrigins = [];
+        var myDest = [];
+        var requestArray;
+
+        var polylineOptionsActual = {
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.6,
+            strokeWeight: 5
+        };
+
+        var directionsDisplayActual = new google.maps.DirectionsRenderer({
+            suppressMarkers: true,
+            polylineOptions: polylineOptionsActual
+        });
+
+        //directionsDisplayActual.setMap(map);
+
+
+        //function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+
+            var a = 0;
+            var checkboxArray1 = [];
+            var checkboxArray2 = [];
+            var waypts = [];
+            var hizlar = [[]];
+            var renkler = [[]];
+            var renderArray = [];
+            var colourArray = [];
+            // KoorVeHizList = [ [ ID1x, ID1y, hiz1, ID2x, ID2y, hiz2], [ ID5x, ID5y, hiz5, ID6x, ID6y, hiz6, ID7x, ID7y, hiz7] ]
+            var route = -1;
+            var KoorVeHizList;
+            requestArray = [];
+            {% for KoorVeHiz in basbitKoorRenkKodu %}
+                //console.log( '{{ KoorVeHiz }}' )
+                route += 1;
+                innerHizlar = [];
+                KoorVeHizList = [];
+                var innerIndex = 0;
+
+                {% for innerKoorVeHiz in KoorVeHiz %}
+                    // KoorVeHizList = [ x1,y1,hiz1, x2,y2,hiz2, ... ]
+                    KoorVeHizList[innerIndex] = '{{ innerKoorVeHiz }}';
+                    innerIndex += 1;
+                {% endfor %}
+
+                waypts = [];
+                hizlar[route] = innerHizlar;
+
+                // Sadece 1 nokta geldiyse calismasin, cunku o zaman baslangic ve bitis noktalari ayni nokta oluyor.
+                if (KoorVeHizList.length>3) {
+                    console.log("KoorVeHizList.length: "+KoorVeHizList.length);
+                    for (i = 0; i < KoorVeHizList.length; i = i + 3) {
+                        var nokta = new google.maps.LatLng(KoorVeHizList[i], KoorVeHizList[i+1]);
+                        waypts.push({
+                            location: nokta,
+                            stopover: true
+                        });
+                        // innerHizlar = [hiz1, hiz2, hiz3, ...]
+                        innerHizlar[i / 3] = KoorVeHizList[i + 2];
+                    }
+                    hizlar[route] = innerHizlar;
+
+
+                    start = waypts.shift().location;
+
+                    finish = waypts.pop().location;
+
+                    var request = {
+                        origin: start,
+                        destination: finish,
+                        waypoints: waypts,
+                        travelMode: google.maps.TravelMode.DRIVING
+                    };
+
+                    requestArray.push({"route": route, "request": request});
+                }
+
+            {% endfor %}
+
+             for (var i=0; i<hizlar.length; i++){
+                 var bos = [];
+                 renkler[i] = bos;
+             }
+             //console.log(hizlar);
+
+             console.log("0:"+ hizlar[0]);
+             console.log("1:"+ hizlar[1]);
+             console.log("2:"+ hizlar[2]);
+            for (var i=0; i<hizlar.length; i++){
+                for (var j=0; j<hizlar[i].length; j++){
+                    console.log(i);
+                    if (hizlar[i][j]>45){
+                        //console.log('if');
+                        renkler[i][j]='#22FF31';
+                    }else{
+                        //console.log('else');
+                        renkler[i][j] = '#FF0000';
+                    }
+                }
+            }
+
+            console.log(requestArray);
+
+              function calc(){
+                  var i = 0;
+
+                  function submitRequest(i) {
+                      directionsService.route(requestArray[i].request, directionResults);
+                  }
+
+                  function directionResults(result, status) {
+                      if (status == google.maps.DirectionsStatus.OK) {
+
+                          var mesafe = result.routes[0].legs[0].distance.value;
+                          console.log(mesafe);
+                          // Create a unique DirectionsRenderer 'i'
+                          renderArray[i] = new google.maps.DirectionsRenderer();
+                          renderArray[i].setMap(map);
+
+                          // Some unique options from the colorArray so we can see the routes
+                          console.log("hizlar: "+hizlar);
+                          if (hizlar[0][i]<45){
+                              renkKodu = '#FF0000';
+                          }
+                          else{
+                              renkKodu = '#22FF31';
+                          }
+
+                          renderArray[i].setOptions({
+                              preserveViewport: true,
+                              suppressInfoWindows: true,
+                              polylineOptions: {
+                                  strokeWeight: 4,
+                                  strokeOpacity: 0.8,
+                                  strokeColor: renkKodu
+                              },
+                              markerOptions: {
+                                  icon: {
+                                      path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+                                      scale: 3,
+                                      strokeColor: '#FF0000'
+                                  }
+                              }
+                          });
+
+                          // Use this new renderer with the result
+                          renderArray[i].setDirections(result);
+                          // and start the next request
+                          nextRequest();
+                      }
+                      else{
+                          console.log(status, i);
+                          nextRequest();
+                      }
+
+                  }
+
+                  function nextRequest() {
+                      // Increase the counter
+                      i = i + 1;
+                      // Make sure we are still waiting for a request
+                      if (i >= requestArray.length) {
+                          // No more to do
+                          return;
+                      }
+                      // Submit another request
+                      submitRequest(i);
+                  }
+
+                  submitRequest(i);
+              }
+
+              calc();
+
+
+
+        //}
+
+        //calculateAndDisplayRoute(directionsService, directionsDisplayActual);
+
+        /*
+          function calculateAndDisplayRoute1(directionsService, directionsDisplay) {
+              directionsService.route({
+                    origin: myOrigins,
+                    destination: myDest,
+                    optimizeWaypoints: true,
+                    travelMode: 'DRIVING'
+                  }, function(response, status) {
+                    if (status === 'OK') {
+                      directionsDisplay.setDirections(response);
+                      var route = response.routes[0];
+                      // For each route, display summary information.
+                      var yolUzunlugu = route.legs[0].distance.value;
+                      if (yolUzunlugu<=2000){
+                          kucuk=1;
+                          window.alert(yolUzunlugu);
+                      }
+                      else{
+                          kucuk = 1;
+                          window.alert(yolUzunlugu+'elayani');
+                      }
+                    }
+                    else {
+                      //window.alert('Directions request failed due to ' + status);
+
+                    }
+
+              });
+          }
+
+        */
+
+
+      }
+
+
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAiLaYpd0zx4HfjULaOVcgxVpQMuKNmD04&callback=initMap">
+    </script>
+  </body>
+</html>

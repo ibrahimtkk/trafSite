@@ -43,7 +43,7 @@ def home_to_stdevi(request):
     liste = tarih.split('/')
     print(liste)
 
-    stdevi.degerleriAl(request, cursor, cnxn)
+    stdevi.degerleriAl(request, cursor, cnxn, 'home_to_stdevi')
 
     ### inputFile: KML dosyasi
     ### IDList[]: vSegID'lerin eklenecegi liste
@@ -54,94 +54,138 @@ def home_to_stdevi(request):
     coordinateList = []
     stdeviAdres = "C:\\Users\\ibrahim\\Desktop\\trafSite\\CSV\\stdevi\\"
     siraliStandartSapmaAdres = stdeviAdres + "{}-{}-{}-{}-SiraliStandartSapma.csv".format(year, month, day, vSegDir)
+    acikAdres = 'C:\\Users\\ibrahim\\Desktop\\trafSite\\adresler\\butunAdresler.txt'
+    havaDurumuAdres = 'C:\\Users\\ibrahim\\Desktop\\trafSite\\adresler\\havaDurumuAdres.txt'
 
-    ### KML dosyasini aciyoruz ve koordinatlar ile vSegID'leri ilgili listelere ekliyoruz
-    with open(inputFile) as f:
-        doc = parser.parse(f).getroot().Document.Folder
-
-        for attr in doc.Placemark:
-            coordinateList.append(attr.MultiGeometry.Point.coordinates)
-            IDList.append(attr.name)
-
-    allOfList = []
-    haritaBilgileri = []
-    for i in range(len(IDList)):
-        b = []
-        b.append(IDList[i])  # name(sensorNo)
-        ayriKoordinatList = str(coordinateList[i]).split(",")
-        b.append(ayriKoordinatList[0])  # y koordinati
-        b.append(ayriKoordinatList[1])  # x koordinati
-        b.append(ayriKoordinatList[2])  # onemsiz
-        allOfList.append(b)
-
-    HDSNbul = sql.SQLBaglanSinif(year, month, day)
-    vSegIDveEnYakinHavaDurumuListGenel = []
-    for allOff in allOfList:
-        vSegIDveEnYakinHavaDurumuListYerel = []
-        enYakinHDSN = HDSNbul.enYakinHavaDurumuSensorunuBulFunc(allOff)
-        if (enYakinHDSN == 17060):
-            enYakinHDSN = "Havalimanı"
-        elif (enYakinHDSN == 17813):
-            enYakinHDSN = "Kadıköy"
-        elif (enYakinHDSN == 18401):
-            enYakinHDSN = 'Şişli'
-        elif (enYakinHDSN == 18403):
-            enYakinHDSN = 'Ümraniye'
-        elif (enYakinHDSN == 18404):
-            enYakinHDSN = 'Üsküdar'
-
-        vSegIDveEnYakinHavaDurumuListYerel.append(allOff[0])
-        vSegIDveEnYakinHavaDurumuListYerel.append(enYakinHDSN)
-        vSegIDveEnYakinHavaDurumuListGenel.append(vSegIDveEnYakinHavaDurumuListYerel)
-
+    ### standart sapma miktarlarinin sirali listesi.
+    ### sensorNo, sapmaMiktari
     with open(siraliStandartSapmaAdres, 'rb') as fp:
         siraliStandartSapmaListesi = pickle.load(fp)
 
-    a = 0
-    geolocator = Nominatim(user_agent="trafSite")
+    ### her bir sensorun acik adresini verir.
+    ### vSegID, yKoor, xKoor, ?, acikAdres
+    with open(acikAdres, 'rb') as fp:
+        acikAdresListesi = pickle.load(fp)
+
+    ### her bir sensore dusen en yakin hava durumu sensorunu verir.
+    with open(havaDurumuAdres, 'rb') as fp:
+        havaDurumuList = pickle.load(fp)
+
+
+    ### Acik adres listesindeki sensorleri ayri bir listeye ekliyoruz, boylece index islemi daha rahat yapilabilecek.
+    acikAdresIDList = []
+    for adres in acikAdresListesi:
+        acikAdresIDList.append(adres[0])
+
+    ### HTML'e gonderilecek liste
+    ### Bazi sensorler bulunamadigindan ValueError veriyor, ona tekrardan bak
+    returnListe = []
     for i in range(20):
-        vSegID = str(siraliStandartSapmaListesi[i][0])
-        for j in range(len(allOfList)):
-            if (str((allOfList[j])[0]) == str(vSegID)):
-                b = []
-                b.append(vSegID)
-                x = allOfList[j][2]
-                y = allOfList[j][1]
-                b.append(y)  # y koor
-                b.append(x)  # x koor
-                b.append(i)
-                b.append(str(siraliStandartSapmaListesi[i][1]))
-                IDListIndex = IDList.index(int(vSegID))  # En yakin hava durumu sensoru ilce ismi
-                b.append(vSegIDveEnYakinHavaDurumuListGenel[IDListIndex][1])
-                koordinat = strKoordinatDondur(x, y)
-                try:
-                    location = geolocator.reverse(koordinat, timeout=None)
-                    b.append(location.address)
-                    # parcalaAdres = location.address.split(',')
-                    # gerekliler = []
-                    # gerekliler.append(parcalaAdres[-4])
-                    # gerekliler.append(parcalaAdres[-5])
-                    # gerekliler.append(parcalaAdres[1])
-                    # print(parcalaAdres)
-                    # adresStr = ", ".join(gerekliler)
-                    # b.append(adresStr)
-                    print(b)
-                    haritaBilgileri.append(b)
-                except GeocoderTimedOut:
-                    print("error time out")
-                    pass
+        vSegID = siraliStandartSapmaListesi[i][0]
+        try:
+            acikAdresIDIndex = acikAdresIDList.index(vSegID)
+            yKoor = acikAdresListesi[acikAdresIDIndex][1]
+            xKoor = acikAdresListesi[acikAdresIDIndex][2]
+            standartSapmaSirasi = i
+            standartSapmaMiktari = siraliStandartSapmaListesi[i][1]
+            acikAdres = acikAdresListesi[acikAdresIDIndex][4]
+            innerReturnList = [vSegID, yKoor, xKoor, standartSapmaSirasi, standartSapmaMiktari, acikAdres]
+            returnListe.append(innerReturnList)
+        except ValueError:
+            pass
 
-    # print(haritaBilgileri)
-    end = time.time()
-    print("views.stdevi_harita() fonksiyonu bitti:", round(end - start))
+    return render(request, 'stdevi/harita.html', {'allOf': returnListe})
 
-    print(len(haritaBilgileri))
 
-    return render(request, 'stdevi/harita.html', {'allOf': haritaBilgileri})
+    #
+    # ### KML dosyasini aciyoruz ve koordinatlar ile vSegID'leri ilgili listelere ekliyoruz
+    # with open(inputFile) as f:
+    #     doc = parser.parse(f).getroot().Document.Folder
+    #
+    #     for attr in doc.Placemark:
+    #         coordinateList.append(attr.MultiGeometry.Point.coordinates)
+    #         IDList.append(attr.name)
+    #
+    # allOfList = []
+    # haritaBilgileri = []
+    # for i in range(len(IDList)):
+    #     b = []
+    #     b.append(IDList[i])  # name(sensorNo)
+    #     ayriKoordinatList = str(coordinateList[i]).split(",")
+    #     b.append(ayriKoordinatList[0])  # y koordinati
+    #     b.append(ayriKoordinatList[1])  # x koordinati
+    #     b.append(ayriKoordinatList[2])  # onemsiz
+    #     allOfList.append(b)
+    #
+    # HDSNbul = sql.SQLeBaglanKarma(year, month, day)
+    # vSegIDveEnYakinHavaDurumuListGenel = []
+    # for allOff in allOfList:
+    #     vSegIDveEnYakinHavaDurumuListYerel = []
+    #     enYakinHDSN = HDSNbul.enYakinHavaDurumuSensorunuBulFunc(allOff)
+    #     if (enYakinHDSN == 17060):
+    #         enYakinHDSN = "Havalimanı"
+    #     elif (enYakinHDSN == 17813):
+    #         enYakinHDSN = "Kadıköy"
+    #     elif (enYakinHDSN == 18401):
+    #         enYakinHDSN = 'Şişli'
+    #     elif (enYakinHDSN == 18403):
+    #         enYakinHDSN = 'Ümraniye'
+    #     elif (enYakinHDSN == 18404):
+    #         enYakinHDSN = 'Üsküdar'
+    #
+    #     vSegIDveEnYakinHavaDurumuListYerel.append(allOff[0])
+    #     vSegIDveEnYakinHavaDurumuListYerel.append(enYakinHDSN)
+    #     vSegIDveEnYakinHavaDurumuListGenel.append(vSegIDveEnYakinHavaDurumuListYerel)
+    #
+    # with open(siraliStandartSapmaAdres, 'rb') as fp:
+    #     siraliStandartSapmaListesi = pickle.load(fp)
+    #
+    # a = 0
+    # geolocator = Nominatim(user_agent="trafSite")
+    # for i in range(20):
+    #     vSegID = str(siraliStandartSapmaListesi[i][0])
+    #     for j in range(len(allOfList)):
+    #         if (str((allOfList[j])[0]) == str(vSegID)):
+    #             b = []
+    #             b.append(vSegID)
+    #             x = allOfList[j][2]
+    #             y = allOfList[j][1]
+    #             b.append(y)  # y koor
+    #             b.append(x)  # x koor
+    #             b.append(i)  # standart sapmasi en yuksek kacinci sensor oldugu
+    #             b.append(str(siraliStandartSapmaListesi[i][1]))  # standart sapma miktari
+    #             #print(siraliStandartSapmaListesi)
+    #             IDListIndex = IDList.index(int(vSegID))
+    #             b.append(vSegIDveEnYakinHavaDurumuListGenel[IDListIndex][1]) # En yakin hava durumu sensoru ilce ismi
+    #             koordinat = strKoordinatDondur(x, y)
+    #             try:
+    #                 location = geolocator.reverse(koordinat, timeout=None)
+    #                 b.append(location.address)
+    #                 # parcalaAdres = location.address.split(',')
+    #                 # gerekliler = []
+    #                 # gerekliler.append(parcalaAdres[-4])
+    #                 # gerekliler.append(parcalaAdres[-5])
+    #                 # gerekliler.append(parcalaAdres[1])
+    #                 # print(parcalaAdres)
+    #                 # adresStr = ", ".join(gerekliler)
+    #                 # b.append(adresStr)
+    #                 print(b)
+    #                 haritaBilgileri.append(b)
+    #             except GeocoderTimedOut:
+    #                 print("error time out")
+    #                 pass
+    #
+    # # print(haritaBilgileri)
+    # end = time.time()
+    # print("views.stdevi_harita() fonksiyonu bitti:", round(end - start))
+    #
+    # print("haritaBilgileri", haritaBilgileri)
+
+
 
     # return render(request, 'stdevi/harita.html', {})
 
-    return render(request, 'stdevi/harita.html')
+    #return render(request, 'stdevi/harita.html')
 
 def strKoordinatDondur(x, y):
     koor = "{}, {}".format(str(x), str(y) )
@@ -155,5 +199,49 @@ def home_to_tumGun(request):
 
     mypytoncodeAnaliz.degerleriAl(request, cursor)
     end = time.time()
+    tarihParcalanacakString = request.POST.get('datepicker1')
+    tarihParcalanmisListe = tarihParcalanacakString.split('/')
+    vSegDir = request.POST.get('vSegDirTumGun')
+    vSegID = request.POST.get('vSegIDTumGun')
+    yil = tarihParcalanmisListe[2]
+    ay = tarihParcalanmisListe[0]
+    ayinKaci = tarihParcalanmisListe[1]
+    print("ay: ", ay)
+    if (ay[0] == "0"):
+        ay = ay.replace("0", "")
+    if (ayinKaci[0] == "0"):
+        ayinKaci = ayinKaci.replace("0", "")
+    ayinKaci = tarihParcalanmisListe[1]
+    resimBilgisi = "images/" + yil + "-" + ay + "-" + ayinKaci + "-" + vSegID + "-" + vSegDir + ".png"
+    print("resimBilgisi: ", resimBilgisi, sep="")
+    mypytoncodeAnaliz.degerleriAl(request, cursor)
+    return render(request, 'analizz/grafik.html', {'resimIsmi': resimBilgisi})
 
-    return render(request, 'analizz/grafik.html', {})
+def home_to_renkliHarita(request):
+    semt = request.POST.get('semt')
+    print(semt)
+    stdevi.degerleriAl(request, cursor, cnxn, 'home_to_renkliHarita')
+    hizLimit = 50
+    basBitKoorRenkKodu = stdevi.basBitKoorRenkKodu(semt, request, hizLimit)
+
+    silinecekler = []
+    for i in basBitKoorRenkKodu:
+        if len(i) < 7:
+            silinecekler.append(i)
+    print("---")
+    for i in silinecekler:
+        basBitKoorRenkKodu.remove(i)
+
+    for i in basBitKoorRenkKodu:
+        print(len(i))
+
+
+    ### HTML'e gonderilecekler: baslangicKoor, bitisKoor, Renkkodu
+
+    #distinctSemtIndex = distinctSemt.index(semt)
+    ### o semte ait butun vSegID'leri dondurur
+    #semtinSensorleri = semtlerinSensorleri[distinctSemtIndex]
+
+    #for i in basBitKoorRenkKodu:
+    #    print(i)
+    return render(request, 'analizz/renkliHarita.html', {'basbitKoorRenkKodu': basBitKoorRenkKodu})
