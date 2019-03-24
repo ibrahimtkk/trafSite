@@ -1,0 +1,24 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Değerler</title>
+	
+	<link rel="stylesheet" href="{% static 'CSS/dizayn_grafik.css' %}">
+	<link rel="icon" href="{% static 'if_Programming_Development_analysis_1743801.ico' %} " type="image/x-icon"/>
+</head>
+<body >
+	<div class="ANA">
+		<!--<div>
+			<button class="home" type="submit" onClick="location.href='../..'"value="Submit"><img src="{% static 'ICO/if_Location_08_1530086.ico' %} " width="20" height="20" alt=""/><b><font size="2">Anasayfa</font></b></button>
+		</div> -->
+			
+		<div class="resim">
+	    	{% autoescape off %}
+	    	    <img class="resim" src="{% static resimIsmi %}">
+	    	{% endautoescape %}
+	    </div>
+	</div>
+</body>
+</html>
