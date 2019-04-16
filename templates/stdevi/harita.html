@@ -1,0 +1,204 @@
+{% load static %}
+
+{# sensör no, yön, yıl ve ay seçtiğimiz analiz kriterlerini girdiğimiz ekran #}
+
+<!doctype html>
+<html>
+    <head>
+        <title>Harita</title>
+        <link rel="stylesheet" href="{% static 'CSS/dizayn_analiz2.css' %}">
+        <link rel="icon" href="{% static 'ICO/if_chart_514935.ico' %}" type="image/x-icon"/>
+        <script src="{% static 'JS/script.js' %}"></script>
+        <!--  <script src="{% static 'KML/docu.kml' %}"></script>  -->
+        <script>
+	    	var map;
+	    	var geocoder;
+	    	function initMap() {
+	    		map = new google.maps.Map(document.getElementById('map'), {
+		        	center: new google.maps.LatLng(41.0082, 28.9784),
+			        zoom: 11,
+			        mapTypeId: 'terrain'
+	        	});
+
+	        	geocoder = new google.maps.Geocoder;
+
+	        	/*var icon = {
+				    url: "C:\\Users\\ibrahim\\Desktop\\trafSite\\icon.png", // url
+				    scaledSize: new google.maps.Size(50, 50), // scaled size
+				    origin: new google.maps.Point(0,0), // origin
+				    anchor: new google.maps.Point(0, 0) // anchor
+				};*/
+
+			    var j=0;
+			    var arr = [];
+			    //var latlng = new google.maps.LatLng(41.0082, 28.9784);
+
+			    // eger adresin duzgun calismasini istiyorsak (38 ile 39'u) ve (74 ile 75'i) yer degistir.
+				//var latlng = new google.maps.LatLng( {{ all.2 }}, {{ all.1 }} );
+				/*
+                {% for all in allOf %}
+				setTimeout(function() {}, 1550);
+					latlng = new google.maps.LatLng( {{ all.2 }}, {{ all.1 }} );
+			   		setTimeout(geocoder.geocode({'location': latlng }, function(results, status){
+				    		if (status=='OK'){
+				    			var marker = new google.maps.Marker({
+						    		position: new google.maps.LatLng( {{ all.2 }}, {{ all.1 }} ),
+						    		map: map,
+						    		info: 'Siralama: {{ all.3 }} <br />'+'Sapma : '+parseFloat('{{ all.4 }}').toFixed(3)+ '<br />Konum: {{ all.5 }} <br />'+ 'Tam Adres: '+results[3].formatted_address
+				    			});
+
+				    			var infowindow = new google.maps.InfoWindow({
+						    		map: map
+						    	});
+
+						    	google.maps.event.addListener(marker, 'mouseover',
+						    		function(){
+						    			infowindow.setContent(this.info);
+						    			infowindow.open(map, this);
+						    		});
+
+						    	google.maps.event.addListener(marker, 'mouseout',
+						    		function(){
+						    			infowindow.close(map, this);
+						    		});
+
+				    		}
+				    		// API, OVER_QUERY_LIMIT hatasi verirse ekrana yazsin.
+				    		else if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
+				    			window.alert("elseif");
+	        					//setTimeout(function() {}, 1000);
+	        				}
+				    		else{
+				    			window.alert("else"+status);
+				    		}
+				    		//window.alert( results );
+				    		//return results[0];
+						}), 250);
+				{% endfor %}
+				*/
+
+				{% for all in allOf %}
+				//setTimeout(function() {}, 1550);
+					//latlng = new google.maps.LatLng( {{ all.2 }}, {{ all.1 }} );
+			   		//setTimeout(geocoder.geocode({'location': latlng }, function(results, status){
+				    		//if (status=='OK'){
+				    			var marker = new google.maps.Marker({
+						    		position: new google.maps.LatLng( {{ all.2 }}, {{ all.1 }} ),
+						    		map: map,
+						    		info: '<b>Sıralama:</b> {{ all.3 }} <br />'+'<b>Sapma Miktarı</b> : '+parseFloat('{{ all.4 }}').toFixed(3)+ '<br /><b>Tam Adres</b>: {{ all.5 }} <br />'
+				    			});
+
+				    			var infowindow = new google.maps.InfoWindow({
+						    		map: map
+						    	});
+
+						    	google.maps.event.addListener(marker, 'mouseover',
+						    		function(){
+						    			infowindow.setContent(this.info);
+						    			infowindow.open(map, this);
+						    		});
+
+						    	google.maps.event.addListener(marker, 'mouseout',
+						    		function(){
+						    			infowindow.close(map, this);
+						    		});
+
+				    		//}
+				    		// API, OVER_QUERY_LIMIT hatasi verirse ekrana yazsin.
+				    		//else if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
+				    			//window.alert("elseif");
+	        					//setTimeout(function() {}, 1000);
+	        				//}
+				    		//else{
+				    			//window.alert("else"+status);
+				    		//}
+				    		//window.alert( results );
+				    		//return results[0];
+						//}), 250);
+				{% endfor %}
+
+
+				
+
+			    	//window.alert(Obj.marker.info);
+			    	/*var marker = new google.maps.Marker({
+			    		position: new google.maps.LatLng( {{ all.2 }}, {{ all.1 }} ),
+			    		map: map,
+			    		info: 'Siralama: {{ all.3 }} <br />'+'Sapma : '+parseFloat('{{ all.4 }}').toFixed(3)+ '<br />Konum: {{ all.5 }} <br />'+ 'cikti: '+cikti
+			    	});*/
+
+			    	/*var infowindow = new google.maps.InfoWindow({
+			    		map: map
+			    	});
+
+			    	google.maps.event.addListener(marker, 'mouseover',
+			    		function(){
+			    			infowindow.setContent(this.info);
+			    			infowindow.open(map, this);
+			    		});
+
+			    	google.maps.event.addListener(marker, 'mouseout',
+			    		function(){
+			    			infowindow.close(map, this);
+			    		});*/
+			    
+	    	}
+
+	    	function geocodeLatLng(geocoder, map, infowindow){
+	    		  var input = document.getElementById('latlng').value;
+				  var latlngStr = input.split(',', 2);
+				  var latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
+				  geocoder.geocode({'location': latlng}, function(results, status) {
+				    if (status === 'OK') {
+				      if (results[0]) {
+				        map.setZoom(11);
+				        var marker = new google.maps.Marker({
+				          position: latlng,
+				          map: map
+				        });
+				        infowindow.setContent(results[0].formatted_address);
+				        infowindow.open(map, marker);
+				      } else {
+				        window.alert('No results found');
+				      }
+				    } else {
+				      window.alert('Geocoder failed due to: ' + status);
+				    }
+				  });
+	    	}
+	    </script>
+        <script async defer
+    		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAiLaYpd0zx4HfjULaOVcgxVpQMuKNmD04&callback=initMap">
+    	</script>
+    </head>
+	<body>
+	<button class="btnExample" type="submit" onClick="location.href='../..'"
+	value="Submit"><img src="{% static 'ICO/if_Location_08_1530086.ico' %}" width="30" height="25" alt=""/><b><font size="2">Anasayfa</font></b></button><br/><br/>
+		<form action="grafikler/" method="POST">
+            {%  csrf_token %}
+				<div id="map" class="map"></div>
+				
+				<div id="table-wrapper" name="table-wrapper">
+	  				<div id="table-scroll" name="table-scroll">
+						<table border="1">
+							<thead>
+					            <tr>
+					                <th><span class="text">Sıralama</span></th>
+					                <th><span class="text">Sapma</span></th>
+					                <th><span class="text">Semt</span></th>
+					            </tr>
+					        </thead>
+							<tbody>
+								{% for all in alll %}
+								<tr>
+									<td> {{ all.3 }} </td>
+									<td> {{ all.4 }} </td>
+									<td> {{ all.5 }} </td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+		</form>
+</html>

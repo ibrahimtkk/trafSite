@@ -1,0 +1,6 @@
+?stasyon Numaras?|?stasyon Ad?|?l|?l?e|Enlem|Boylam|Rak?m
+17060|?STANBUL ATAT?RK HAVAL?MANI|?stanbul|Bak?rk?y|40.9819|28.8208|33
+17813|KADIK?Y/G?ZTEPE MARMARA|?stanbul|Kad?k?y|40.9890|29.0532|41
+18401|???L?|?stanbul|?i?li|41.0547|28.9683|60
+18403|?MRAN?YE|?stanbul|?mraniye|41.0294|29.1383|191
+18404|?SK?DAR|?stanbul|?sk?dar|41.0328|29.0464|75
