@@ -1,0 +1,4 @@
+?stasyon Numaras?|?stasyon Ad?|?l|?l?e|Enlem|Boylam|Rak?m
+17060|?STANBUL ATAT?RK HAVAL?MANI|?stanbul|Bak?rk?y|40.9819|28.8208|33
+17061|SARIYER|?stanbul|Sar?yer|41.1464|29.0502|59
+17062|KADIK?Y RIHTIM|?stanbul|Kad?k?y|40.9883|29.0190|5

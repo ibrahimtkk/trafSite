@@ -1,0 +1,20 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Değerler</title>
+    
+    <link rel="stylesheet" href="{% static 'CSS/dizayn_grafik.css' %}">
+    <link rel="icon" href="{% static 'if_Programming_Development_analysis_1743801.ico' %} " type="image/x-icon"/>
+</head>
+<body>
+   	<div class="ANA">
+   		<div class="resim">
+		    {% autoescape off %}
+		        <img src="{% static resimIsmi %}">
+		    {% endautoescape %}   			
+   		</div>
+   	</div>
+</body>
+</html>
