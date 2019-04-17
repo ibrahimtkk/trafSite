@@ -1,0 +1,53 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="stylesheet" href="{% static 'CSS/aylikGrafik.css' %}">
+</head>
+<body>
+	<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAiLaYpd0zx4HfjULaOVcgxVpQMuKNmD04&callback=initMap">
+    </script>
+    <script>
+    	function initMap() {
+          mapAylik = new google.maps.Map(document.getElementById('mapAylik'), {
+              center: new google.maps.LatLng(41.0082, 28.9784),
+              zoom: 11,
+              mapTypeId: 'terrain',
+              disableDoubleClickZoom: true,
+          });
+          var marker = new google.maps.Marker({
+              position: new google.maps.LatLng( {{ lat }}, {{ lng }} ),
+              map: mapAylik,
+              info: '{{ acikAdres }}'
+          });
+          var infowindow = new google.maps.InfoWindow({
+              map: mapAylik
+          });
+
+          google.maps.event.addListener(marker, 'mouseover',
+              function(){
+                  infowindow.setContent(this.info);
+                  infowindow.open(mapAylik, this);
+          });
+
+          google.maps.event.addListener(marker, 'mouseout',
+              function(){
+                  infowindow.close(mapAylik, this);
+              });
+
+      }
+	</script>
+
+   	<div id="row" name="row">
+     		<div id="aylikGrafik" name="aylikGrafik">
+            {% autoescape off %}
+                <img src="{% static resimAdresi %}" id="aylikGrafik">
+            {% endautoescape %}
+     		</div>
+        <br>
+        <div id="mapAylik" class="map"></div>
+   	</div>
+</body>
+</html>
