@@ -1,0 +1,21 @@
++ Python üzerinden adres alma iþlemini sunucuya yaptýr.
+
++ Sunucudan yapýlan adres alma iþleminin çýktýlarýný dosyaya kaydet.
+
++ Ekrana yazdýrýlacak adresleri dosyadan oku, böylece her seferinde adres alma iþlemi ve hatasý ile karþýlaþma.
+
+-+ Her ayýn 15'i için belli bir havuz oluþtur ve kullanýcý tarih girdiðinde beklemeden hemen karþýsýna harita çýksýn.
+
+- Harita üzerinde en yüksek standart sapmaya sahip ilk 20 lokasyon çýkýyor, ilk 100 lokasyonu ekranýn sað tarafýna yazdýr.
+
+- Mümkünse standart sapma sýralamasýndaki numarasýný pin üzerinde göster, böylece sýralamadaki yerini öðrenmek için pin'in üzerine gelmek zorunda kalma.
+
+- Renklendirme çalýþmasýna baþla.
+	- Kullanýcýdan belli bir semt ve zaman dilimi alýnacak. Alýnan bu bilgiler doðrultusunda o aralýkta bulunan sensörler ve hýz 		bilgileri bulunacak. Saat aralýðýndaki hýz bilgilerinin ortalamasý alýnacak. Ardarda gelen 2 sensörün hýz ortalamalarý alýnacak. 		Bu ortalamanýn belli bir hýz limitinin üstünde kalmasý durumunda o 2 sensör arasý yeþile, altýnda kalmasý durumunda ise kýrmýzýya 		boyanacak.
+	+0. Seçilen semtte yer alan sensörler bulunacak ve kaydedilecek.
+	+1. Ardarda gelen 2 sensor bulunacak.
+	-2. Bu sensörlerin hýz ortalamalarý alýnacak.
+	-3. Belli bir hýz limitinin altýnda kalýp kalmadýðý kontrol edilecek.
+	-4. Ona göre renklendirme yapýlacak.
+
+- Çýktý ekranýndaki açýklama satýrlarýný düzenle. Yapabiliyorsan iþlemin yüzde kaçýný yaptýðýný ekrana yazdýr(Abdulkadir hocanýn söylediði bir kütüphane vardý, onu kullanabilirsin).

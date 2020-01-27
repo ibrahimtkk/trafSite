@@ -1,0 +1,499 @@
+{% load static %}
+
+{# Ana sayfa #}
+
+<!doctype html>
+<html>
+    <head>
+         <title>Trafik Nerede</title>
+
+
+
+        <!-- Sayfanın ilkellikten kurtulması için kullanılır. Temel HTML kısmında containerları falan görmek istersek bu satırı
+         yorum satırı yapabilirsin. -->
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+
+        <!-- saate tıklarken farenin okken parmak olmasını sağlar(?) -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />
+
+        <!-- Jquery kodlarının çalışması için kullanılıyor -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+        <!-- Tablar ve piller arası geçiş için olmazsa olmaz -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+        <!-- Datetimepicker için olmazsa olmazlar -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+
+        <!-- Takvimin düzgün gözükmesini sağlar -->
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+        <!-- datepicker'ın çalışmasını sağlar -->
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+         <script src="{% static 'JS/script.js' %}"></script>
+         <link rel="stylesheet" href="{% static 'CSS/dizayn_home.css' %}">
+         <link rel="icon" href="{% static 'ICO/if_traffic-light_27268.ico' %}" type="image/x-icon"/>
+         <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
+
+
+         <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+         <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"/> -->
+
+
+
+    </head>
+    <body>
+        <script>
+            $("ul.nav-tabs a").click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+        </script>
+        <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAiLaYpd0zx4HfjULaOVcgxVpQMuKNmD04&callback=initMap">
+        </script>
+        <script>
+            var map;
+            var location;
+            var addListe;
+            var marker;
+            var geocoder;
+            var latLng, xyKoorLat, xyKoorLng;
+            function initMap() {
+                initMapTahmin();
+            }
+            
+
+            function initMapTahmin() {
+                mapTahmin = new google.maps.Map(document.getElementById('mapTahmin'), {
+                    center: new google.maps.LatLng(41.0082, 28.9784),
+                    zoom: 11,
+                    mapTypeId: 'terrain',
+                    disableDoubleClickZoom: true,
+                });
+
+                mapTumGun = new google.maps.Map(document.getElementById('mapStandart'), {
+                    center: new google.maps.LatLng(41.0082, 28.9784),
+                    zoom: 11,
+                    mapTypeId: 'terrain',
+                    disableDoubleClickZoom: true,
+                });
+
+                geocoder = new google.maps.Geocoder;
+                latLng = new google.maps.LatLng(41.0082, 28.9784);
+                markerTahmin = new google.maps.Marker({
+                    map: mapTahmin,
+                });
+
+                google.maps.event.addListener(mapTahmin, 'click', function(e) {
+                    marker = new google.maps.Marker({
+                        position: e.latLng,
+                        map: mapTahmin
+                    });
+                    xyKoorLat = e.latLng.lat();
+                    xyKoorLng = e.latLng.lng();
+                    document.getElementById("latTahmin").value = xyKoorLat;
+                    document.getElementById("lngTahmin").value = xyKoorLng;
+                });
+
+                google.maps.event.addListener(mapTumGun, 'click', function(e) {
+                    marker = new google.maps.Marker({
+                        position: e.latLng,
+                        map: mapTumGun
+                    });
+                    xyKoorLat = e.latLng.lat();
+                    xyKoorLng = e.latLng.lng();
+                    document.getElementById("lat").value = xyKoorLat;
+                    document.getElementById("lng").value = xyKoorLng;
+                });
+            }
+
+        </script>
+        <script type="text/javascript">
+            $(function () {
+                $('#datepicker1').datepicker({ 
+                    dateFormat: 'dd/mm/yy',
+                    today: 'Bugün',
+                    monthNames: [ "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık" ],
+                    dayNamesMin: [ "Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Ct" ],
+                });
+            });
+            $(function () {
+                $('#datetimepicker7').datetimepicker({
+                    format: 'HH:mm'
+                });
+            });
+            $(function () {
+                $('#datetimepicker8').datetimepicker({
+                    format: 'HH:mm'
+                });
+            });
+            $(function () {
+                $('#datepicker7').datepicker({ 
+                    dateFormat: 'dd/mm/yy',
+                    today: 'Bugün',
+                    monthNames: [ "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık" ],
+                    dayNamesMin: [ "Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Ct" ],
+                });
+            });
+            $(function () {
+                $('#datetimepicker9').datetimepicker({
+                    format: 'HH:mm'
+                });
+            });
+            $(function () {
+                $('#datetimepicker3').datetimepicker({
+                    format: 'HH:mm'
+                });
+            });
+            $(function () {
+                $('#datepicker6').datepicker({ 
+                dateFormat: 'dd/mm/yy',
+                today: 'Bugün',
+                monthNames: [ "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık" ],
+                dayNamesMin: [ "Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Ct" ], 
+                });
+            });
+            $(function () {
+                $('#datetimepicker5').datetimepicker({
+                    format: 'HH:mm'
+                });
+            });
+            $(function () {
+                $('#datetimepicker6').datetimepicker({
+                    format: 'HH:mm'
+                });
+            });
+            $(function () {
+                $('#datepicker5').datepicker({ 
+                    dateFormat: 'dd/mm/yy',
+                    today: 'Bugün',
+                    monthNames: [ "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık" ],
+                    dayNamesMin: [ "Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Ct" ],
+                 });
+            });
+            $(function () {
+                $('#datetimepicker4').datetimepicker({
+                    format: 'HH:mm'
+                })
+            })
+        </script>
+
+        <br><br>
+        
+
+        <div id="exTab1" class="container">
+
+        <!-- <div class="enDis"> -->
+
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a data-toggle="tab" href="#analiz">Analiz</a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#tahmin">Tahmin</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade active in" id="analiz">
+                    <ul class="nav nav-pills">
+                        <li class="active">
+                            <a data-toggle="tab" href="#tumGun">Tum Gun</a>
+                        </li>
+                        
+                            <!--<li>
+                                <a data-toggle="tab" href="#belirliSaat">Belirli Saat</a>
+                            </li>
+                            <li>
+                                <a data-toggle="tab" href="#belirliAralik">Belirli Aralik</a>
+                            </li>-->
+                        
+                        <li>
+                            <a data-toggle="tab" href="#standartSapma">Kritik Noktalar</a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#yollariRenklendir">Renkli Yollar</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+
+<!-- --------------------------------------------------------------------------------------------------------------- -->
+
+                        <div class="tab-pane fade active in" id="tumGun" name="tumGun">
+                            
+                            
+                            <form action="analiz/grafikler/" method="POST">
+                                {%  csrf_token %}
+                                <fieldset>
+
+                                    <div id="mapStandart" class="map"></div>
+
+
+                                    <!-- src asc buradaydi -->
+
+
+                                    <div class="row" id="tarihRow" name="tarihRow">
+                                        <div class="col-md-2">
+                                            <label for="formvSegDirTumGun">Sensör Yönü</label>
+                                                <input type="text" class="form-control" name="vSegDirTumGun" id="vSegDirTumGun" placeholder="numeric">
+                                                <br>
+                                            <label for="yokBegenGecTarih">Tarih</label>
+                                                <input type="text" class="form-control" name = 'datepicker1' id="datepicker1">
+                                        </div>
+
+                                        <div class="col-md-2">
+                                            <label>Başlangıç Saat</label>
+                                                <div class='input-group date' id='datetimepicker7' name="datetimepicker7">
+                                                    <input type='text' class="form-control"  id='datetimepicker7' name="datetimepicker7"/>
+                                                    <span class="input-group-addon">
+                                                        <span class="glyphicon glyphicon-time"></span>
+                                                    </span>
+                                                </div>
+                                                <br>
+                                            <label>Bitiş Saati</label>
+                                                <div class="input-group date" id="datetimepicker8" name="datetimepicker8">
+                                                    <input type="text" class="form-control"  id='datetimepicker8' name="datetimepicker8">
+                                                    <span class="input-group-addon">
+                                                        <span class="glyphicon glyphicon-time"></span>
+                                                    </span>
+                                                </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <br>
+                                            <label for="forKTumGun">K değeri</label>
+                                                <input type="text" class="form-control" name="KTumGun" id="KTumGun" placeholder="K">
+                                        </div>
+                                    </div>
+                                    
+
+
+                                    <input type="text" id="lat" name="lat" >
+                                    <input type="text" id="lng" name="lng" >
+
+                                    <input class="button-success" type="submit" value="Onayla" />
+                                    <input class="form" type="reset" value="Formu Sıfırla"/>
+                                </fieldset>
+                            </form>
+                        </div>
+
+<!-- --------------------------------------------------------------------------------------------------------------- -->
+
+                        <div class="tab-pane fade" id="belirliSaat">
+                            <form action="analiz/grafikler/" method="POST">
+                                {%  csrf_token %}
+                                <fieldset>
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label for="formvSegIDBelirliSaat">Sensör Numarası</label>
+                                                <input type="text" class="form-control" name="vSegIDBelirliSaat" id="vSegIDBelirliSaat" placeholder="numeric">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="formvSegDirBelirliSaat">Sensör Yönü</label>
+                                                <input type="text" class="form-control" name="vSegDirBelirliSaat" id="vSegDirBelirliSaat" placeholder="numeric">
+                                            </div>
+                                        </div>
+                                        <br></br>
+
+
+                                        <div class="row">
+                                            <div class='col-sm-3'>
+                                                <div class="form-group">
+                                                    <label>Başlangıç Saat</label>
+                                                    <div class='input-group date' id='datetimepicker3'>
+                                                        <input type='text' class="form-control" />
+                                                        <span class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-time"></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Bitiş Saati</label>
+                                                    <div class="input-group date" id="datetimepicker4">
+                                                        <input type="text" class="form-control">
+                                                        <span class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-time"></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+
+                                        <div class="row" id="belirliSaatRow">
+                                            <input class="button-success" type="submit" id="belirliSaatOnayla" value="Onayla"/>
+                                            <input class="form" type="reset" id="belirliSaatReset" value="Formu Sıfırla"/>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
+
+<!-- --------------------------------------------------------------------------------------------------------------- -->
+
+                        <div class="tab-pane fade" id="belirliAralik">
+                            <p>Belirli Aralik</p>
+                        </div>
+
+<!-- --------------------------------------------------------------------------------------------------------------- -->
+
+                        <div class="tab-pane fade" id="standartSapma">
+                            <form action="stdevi/harita/" method="POST">
+                                {%  csrf_token %}
+                                <fieldset>
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label for="formvSegDirStandartSapma">Sensör Yönü</label>
+                                                <input type="text" class="form-control" name="vSegDirStandartSapma" id="vSegDirStandartSapma" placeholder="numeric">
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label for="labelStandartSapmaTime">Tarih:</label>
+                                                    <input type="text" class="form-control" name="datepicker5" id="datepicker5">
+                                                </div>
+                                            </div>
+                                            <script type="text/javascript">
+                                                $(function () {
+                                                    $('#datepicker5').datepicker({ 
+                                                        dateFormat: 'dd/mm/yy',
+                                                        today: 'Bugün',
+                                                        monthNames: [ "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık" ],
+                                                        dayNamesMin: [ "Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Ct" ],
+                                                     });
+                                                });
+                                            </script>
+                                        </div>
+                                        <div class="row" id="belirliSaatRow">
+                                            <input class="button-success" type="submit" id="belirliSaatOnayla" value="Onayla"/>
+                                            <input class="form" type="reset" id="belirliSaatReset" value="Formu Sıfırla"/>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
+
+
+<!-- --------------------------------------------------------------------------------------------------------------- -->
+
+                        <div class="tab-pane" id="yollariRenklendir">
+                            <form action="analiz/renkliHarita/" method="POST">
+                                {%  csrf_token %}
+                                <fieldset>
+                                    <div class="container">
+                                        <br><br>
+                                        <div class="row">
+                                            <div class='col-sm-3'>
+                                                <div class="form-group">
+                                                    <label>Başlangıç Saat</label>
+                                                    <div class='input-group date' id='datetimepicker5' name="datetimepicker5">
+                                                        <input type='text' class="form-control"  id='datetimepicker5' name="datetimepicker5"/>
+                                                        <span class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-time"></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label>Bitiş Saati</label>
+                                                    <div class="input-group date" id="datetimepicker6" name="datetimepicker6">
+                                                        <input type="text" class="form-control"  id='datetimepicker6' name="datetimepicker6">
+                                                        <span class="input-group-addon">
+                                                            <span class="glyphicon glyphicon-time"></span>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row" id="renklendirRow">
+                                            <br>
+                                            
+                                            
+                                            <div class="col-md-3">
+                                                <label for="formvSegDirRenkliHarita">Sensör Yönü</label>
+                                                <input type="text" class="form-control" name="vSegDirRenkliHarita" id="vSegDirRenkliHarita" placeholder="numeric">
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label for="labelStandartSapmaTime">Tarih:</label>
+                                                    <input type="text" class="form-control" name="datepicker6" id="datepicker6">
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        <br>
+                                       
+                                        
+
+                                        <div class="row">
+                                            <input class="button-success" type="submit" id="renklendirOnayla" value="Onayla"/>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+<!-- --------------------------------------------------------------------------------------------------------------- -->
+
+                <div class="tab-pane fade" id="tahmin">
+                    <br><br>
+                    <form action="tahmin/tahminiYol/" method="POST">
+                        {%  csrf_token %}
+                        <fieldset>
+
+                            <div id="mapTahmin" class="map"></div>
+
+                            <div class="row" id="tarihRowTahmin" name="tarihRowTahmin">
+                                <div class="col-md-2">
+                                    <label for="formvSegDirTahmin">Sensör Yönü</label>
+                                        <input type="text" class="form-control" name="vSegDirTahmin" id="vSegDirTahmin" placeholder="numeric">
+                                        <br>
+                                    <label for="yokBegenGecTarihTahmin">Tarih</label>
+                                        <input type="text" class="form-control" name = 'datepicker7' id="datepicker7">
+                                </div>
+
+                                <div class="col-md-2">
+                                    <label>Tahmin Edilecek Saat</label>
+                                        <div class='input-group date' id='datetimepicker9' name="datetimepicker9">
+                                            <input type='text' class="form-control"  id='datetimepicker9' name="datetimepicker9"/>
+                                            <span class="input-group-addon">
+                                                <span class="glyphicon glyphicon-time"></span>
+                                            </span>
+                                        </div>
+                                        <br>
+                                </div>
+                                <div class="col-md-2">
+                                    <br>
+                                    <label for="forKTahmin">K değeri</label>
+                                        <input type="text" class="form-control" name="KTahmin" id="KTahmin" placeholder="K">
+                                </div>
+                            </div>
+
+                            <input type="text" id="latTahmin" name="latTahmin" >
+                            <input type="text" id="lngTahmin" name="lngTahmin" >
+                            <br>
+                            <input class="button-success" type="submit" value="Onayla" />
+                            <input class="form" type="reset" value="Formu Sıfırla"/>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>

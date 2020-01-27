@@ -1,0 +1,435 @@
+{% load static %}
+
+{# Renkli harita #}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+        <meta charset="utf-8">
+        <title>Directions Service</title>
+        <style>
+            #map {
+                height: 100%;
+            }
+            html, body {
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            #floating-panel {
+                position: absolute;
+                top: 10px;
+                left: 25%;
+                z-index: 5;
+                background-color: #00aa88;
+                padding: 5px;
+                border: 1px solid #491217;
+                text-align: center;
+                font-family: 'Roboto','sans-serif';
+                line-height: 30px;
+                padding-left: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map"></div>
+        <script>
+            function sleep(milliseconds){
+                var start = new Date().getTime();
+                for (var i=0; i<1e7; i++){
+                    if ((new Date().getTime() - start) > milliseconds){
+                        break;
+                    }
+                }
+            }
+
+            function initMap(){
+                var directionsService = new google.maps.DirectionsService;
+                var map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 11,
+                    center: {lat: 41.0520, lng: 29.0106}
+                });
+                var directionsDisplay = new google.maps.DirectionsRenderer;
+                var kucuk;
+                var myRouter=[], myOrigins=[], myDest=[], requestArray=[], requestArrayUzaklik=[];
+                var wait=true;
+                var waypts=[], hizlar=[], xKoordinati=[], yKoordinati=[];
+                var renkler = [[]];
+                var renderArray=[], colourArray=[];
+                var OverQueryLimitErrorCount=0, NotOverQueryLimitErrorCount=0;
+                var route=0, innerIndex, sayi=0, mod=0;
+                var innerHizlar=[], innerXKoordinat=[], innerYKoordinat=[], KoorVeHizList=[];
+
+                directionsDisplay.setMap(map);
+
+                {% for KoorVeHiz in siraliKoorVeHiz %}
+                    innerHizlar = [];
+                    innerXKoordinat = [];
+                    innerYKoordinat = [];
+                    KoorVeHizList = [];
+                    innerIndex = 0;
+
+                    {% for koorVeyaHiz in KoorVeHiz %}
+                        KoorVeHizList[innerIndex] = '{{ koorVeyaHiz }}';
+                        innerIndex += 1;
+                        sayi += 1;
+                    {% endfor %}
+                    //console.log("KoorVeHizList.length: "+KoorVeHizList.length);
+                    
+                    if (KoorVeHizList.length>3){
+                        // ard arda gelebilecek sensor sayisi en fazla 25'tir.
+                        for (bolum=0; bolum<(KoorVeHizList.length/75); bolum++){
+                            //console.log("yeniKoorVeHizList.length: "+KoorVeHizList.length);
+                            // arka arkaya gelen sensor sayisinin en az 3 olup olmadigini kontrol ediyoruz.
+                            if (KoorVeHizList.length%75 >= 9){
+                                waypts = [];
+                                for (i=bolum*75; i<(bolum+1)*75; i=i+3){
+                                    if (i<KoorVeHizList.length){
+                                        var nokta = new google.maps.LatLng(KoorVeHizList[i], KoorVeHizList[i+1]);
+                                        //console.log(i+" "+KoorVeHizList[i]+" "+ KoorVeHizList[i+1])
+                                        waypts.push({
+                                            location: nokta,
+                                            stopover: true
+                                        });
+                                        innerHizlar[i/3] = KoorVeHizList[i+2];
+                                        innerXKoordinat[i/3] = KoorVeHizList[i];
+                                        innerYKoordinat[i/3] = KoorVeHizList[i+1];
+                                    }
+                                    //console.log("************buldu: "+ KoorVeHizList[i]+ " "+ KoorVeHizList[i+1]+ " "+ KoorVeHizList[i+2]);
+                                    
+                                }
+
+                                //if ( (bolum+1)*75 < KoorVeHizList.length ){
+                                //    for (i=bolum*75; i<(bolum+1)*75; i=i+3){
+                                //        var nokta = new google.maps.LatLng(KoorVeHizList[i], KoorVeHizList[i+1]);
+                                //        waypts.push({
+                                //            location: nokta,
+                                //            stopover: true
+                                //        });
+                                //        innerHizlar[i/3] = KoorVeHizList[i+2];
+                                //        innerXKoordinat[i/3] = KoorVeHizList[i];
+                                //        innerYKoordinat[i/3] = KoorVeHizList[i+1];
+                                //        //console.log("************buldu: "+ KoorVeHizList[i]+ " "+ KoorVeHizList[i+1]+ " "+ KoorVeHizList[//i+2]);
+                                //        
+                                //    }
+                                //}
+                                //else{
+                                //    for (i=bolum*75; i<KoorVeHizList.length; i=i+3){
+                                //        var nokta = new google.maps.LatLng(KoorVeHizList[i], KoorVeHizList[i+1]);
+                                //        waypts.push({
+                                //            location: nokta,
+                                //            stopover: true
+                                //        });
+                                //        innerHizlar[i/3] = KoorVeHizList[i+2];
+                                //        innerXKoordinat[i/3] = KoorVeHizList[i];
+                                //        innerYKoordinat[i/3] = KoorVeHizList[i+1];
+                                //    }
+                                //}
+                                hizlar[route] = innerHizlar;
+                                xKoordinati[route] = innerXKoordinat;
+                                yKoordinati[route] = innerYKoordinat;
+                                start = waypts.shift().location;
+                                finish = waypts.pop().location;
+
+                                var request = {
+                                    origin: start,
+                                    destination: finish,
+                                    waypoints: waypts,
+                                    travelMode: google.maps.TravelMode.DRIVING
+                                };
+                                requestArray.push({"route": route, "request": request});
+                                route += 1;
+                            }
+                        }
+                    }
+                {% endfor %}
+                // !!! bilgi amaclidir, silinebilir !!!
+                //for (i=0; i<xKoordinati.length; i++){
+                //    for (j=0; j<xKoordinati[i].length; j++){
+                //        if ( yKoordinati[i][j] == 29.066713592){
+                //            console.log(xKoordinati[i][j]+ " "+ yKoordinati[i][j]+ " "+ hizlar[i][j])
+                //        }
+                //    }
+                //}
+
+                var oncekiSensorHizi, sonrakiSensorHizi, ortalamaHiz, directionResultsCount=0;
+                var bos=[];
+
+                for (i=0; i<hizlar.length; i++){
+                    renkler[i] = bos;
+                }
+                // deep copy
+                //var requestArrayUzaklik = $.extend("true", {}, requestArray);
+
+                //var indexUzaklik = 0;
+                //function calcUzaklik() {
+                //    submitRequestUzaklik();
+                //}
+//
+                //function rad(x){
+                //    return x*Math.PI / 180;
+                //}
+//
+                //function getDistanceUzaklik(p1, p2){
+                //    var R = 6378137;
+                //    var dLat = rad(p2.lat() - p1.lat());
+                //    var dLong = rad(p2.lng() - p1.lng());
+                //    var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(rad(p1.lat()))*Math.cos(rad(p2.lat()))*Math.sin(dLong/2)*Math.sin//(dLong/2);
+                //    var c = 2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                //    var d = R*c;
+                //    return d;
+                //}
+//
+                //function submitRequestUzaklik(){
+                //    var i=0;
+                //    console.log("1");
+                //    directionsService.route(requestArray[indexUzaklik].request, directionResultsUzaklik);
+                //    console.log(requestArray[indexUzaklik].request);
+                //    console.log("2");
+                //}
+//
+                //function directionResultsUzaklik(result, status){
+                //    console.log("3");
+                //    console.log("indexUzaklik: "+ indexUzaklik);
+                //    var mesafe, i, ilkSensor, ikinciSensor, baslangicIndexArray=[], hepSirali=1;
+                //    baslangicIndexArray.push(0);
+                //    console.log("directionResultsUzaklik'taki result: ");
+                //    console.log(result);
+                //    if (status=google.maps.DirectionsStatus.OK){
+                //        console.log("directionResultsUzaklik'teki OK");
+                //        for (i=0; i<result.routes[0].legs.length; i++){
+                //            ilkSensor = result.routes[0].legs[i].start_location;
+                //            ikinciSensor = result.routes[0].legs[i].end_location;
+                //            mesafe = getDistanceUzaklik(ilkSensor, ikinciSensor);
+                //            if (mesafe>10000){
+                //                hepSirali = 0;
+                //                baslangicIndexArray.push(i-1);
+                //                baslangicIndexArray.push(i);
+                //            }
+                //        }
+                //        baslangicIndexArray.push(i-1);
+                //        if (hepSirali==1){
+                //            requestArrayUzaklik.push( requestArray[indexUzaklik] );
+                //            console.log("sirali vaaar");
+                //        }
+                //        else{
+                //            console.log("sirali yoook");
+                //            console.log("baslangicIndexArray.length: "+ baslangicIndexArray.length);
+                //            for (i=baslangicIndexArray.length-1; i>0; i=i-2){
+                //                console.log("içerdema");
+                //                var newwaypts=[], start, finish;
+                //                start = result.request.origin;
+                //                finish = result.request.destination;
+                //                waypts = result.request.waypoints;
+                //                for (j=baslangicIndexArray[i-1]; j<baslangicIndexArray[i]; j++){
+                //                    if (j==0){
+                //                        newwaypts.push(start);
+                //                    }
+                //                    else if (j==waypts.length-1){
+                //                        newwaypts.push(finish);
+                //                    }
+                //                    else{
+                //                        newwaypts.push(waypts[j-1]);
+                //                    }
+                //                }
+                //                console.log("newwaypts: ");
+                //                console.log(newwaypts);
+                //                if (newwaypts.length>3){
+                //                    start = newwaypts.shift().location;
+                //                    finish = newwaypts.pop().location;
+                //                    var request = {
+                //                        origin: start,
+                //                        destination: finish,
+                //                        waypoints: newwaypts,
+                //                        travelMode: google.maps.TravelMode.DRIVING
+                //                    };
+                //                    console.log("push'tan once");
+                //                    requestArrayUzaklik.push({"route": route, "request": request});
+                //                    //for (j=baslangicIndexArray[i-1]; j<baslangicIndexArray[i]; j++){
+                //                    //    requestArrayUzaklik[indexUzaklik].splice(j, 1);
+                //                    //}
+                //                    console.log("push'tan sonra");
+                //                }
+                //            }
+                //        }
+                //        renderArray[indexUzaklik] = new google.maps.DirectionsRenderer();
+                //        console.log("requestArrayUzaklik: ");
+                //        console.log(requestArrayUzaklik);
+                //        nextRequestUzaklik()
+                //    }
+                //    else{
+                //        console.log("Uzaklikta hata var");
+                //        nextRequestUzaklik()
+                //    }
+                //}
+//
+                //function nextRequestUzaklik(){
+                //    console.log("nextRequestUzaklik girdi: "+ indexUzaklik);
+                //    indexUzaklik = indexUzaklik + 1;
+                //    if (indexUzaklik>=requestArrayUzaklik.length){
+                //        return;
+                //    }
+                //    submitRequestUzaklik();
+                //}
+
+                
+
+                
+                
+
+                var indx=0;
+                function calc(){
+                    submitRequest();
+                }
+                function submitRequest(){
+                    //console.log("4");
+                    //console.log("once: "+ indx);
+                    //console.log("requestArray: ");
+                    //console.log(requestArray);
+                    //console.log(requestArray[indx]);
+                    directionsService.route(requestArray[indx].request, directionResults);
+                    //directionsService.route(requestArray[indx].request, directionResults);
+                    //console.log("sonra: "+ indx);
+                    //console.log("son");
+                }
+
+                function rad(x){
+                    return x*Math.PI / 180;
+                }
+
+                function getDistance(p1, p2){
+                    var R = 6378137;
+                    var dLat = rad(p2.lat() - p1.lat());
+                    var dLong = rad(p2.lng - p1.lng());
+                    var a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(rad(p1.lat()))*Math.cos(rad(p2.lat()))*Math.sin(dLong/2)*Math.sin(dLong/2);
+                    var c = 2*Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                    var d=R*c;
+                    return d;
+                }
+
+                function directionResults(result, status){
+                    //console.log("5");
+                    //console.log("directionRESULt");
+                    directionResultsCount++;
+                    //console.log("---:"+ directionResultsCount);
+                    var mesafe, i, j, ilkSensor, ikinciSensor;
+
+                    if (status == "OK"){
+                        NotOverQueryLimitErrorCount += 1;
+                        for (i=0; i<result.routes[0].legs.length; i++){
+                            ilkSensor = result.routes[0].legs[i].start_location;
+                            ikinciSensor = result.routes[0].legs[i].end_location;
+                            mesafe = getDistance(ilkSensor, ikinciSensor);
+                        }
+
+                        renderArray[indx] = new google.maps.DirectionsRenderer();
+                        console.log(hizlar[indx].length);
+                        for (j=0; j<hizlar[indx].length-1; j++){
+                            oncekiSensorHizi = parseInt(hizlar[indx][j], 10);
+                            sonrakiSensorHizi = parseInt(hizlar[indx][j+1], 10);
+                            ortalamaHiz = parseInt((oncekiSensorHizi+sonrakiSensorHizi)/2, 10);
+                            if (ortalamaHiz<15){
+                                renkler[indx][j] = "#8B0000";
+                            }
+                            else if (ortalamaHiz>=15 && ortalamaHiz<25){
+                                renkler[indx][j] = "#FF0000";
+                            }
+                            else if (ortalamaHiz>=25 && ortalamaHiz<45){
+                                renkler[indx][j] = "#FFD700";
+                            }
+                            else if (ortalamaHiz>=45 && ortalamaHiz<70){
+                                renkler[indx][j] = "#008000";
+                            }
+                            else if (ortalamaHiz>=70){
+                                renkler[indx][j] = "#00FF00";
+                            }
+                        }
+
+                        renderDirectionsPolylines(result, map, renderArray[indx], renkler[indx]);
+                        sleep(1200);
+                        nextRequest();
+                    }
+                    else if (status == "MAX_WAYPOINTS_EXCEED"){
+                        OverQueryLimitErrorCount += 1;
+                        for (j=0; j<result.routes[0].legs.length-1; j++){
+                            oncekiSensorHizi = parseInt(hizlar[indx][j], 10);
+                            sonrakiSensorHizi = parseInt(hizlar[indx][j+1], 10);
+                            ortalamaHiz = parseInt((oncekiSensorHizi+sonrakiSensorHizi)/2, 10);
+
+                            if (ortalamaHiz<15){
+                                renkler[indx][j] = "#8B0000";
+                            }
+                            else if (ortalamaHiz>=15 && ortalamaHiz<24){
+                                renkler[indx][j] = "#FF0000";
+                            }
+                            else if (ortalamaHiz>=24 && ortalamaHiz<45){
+                                renkler[indx][j] = "#FFD700";
+                            }
+                            else if (ortalamaHiz>=45 && ortalamaHiz<70){
+                                renkler[indx][j] = "#008000";
+                            }
+                            else if (ortalamaHiz>=70){
+                                renkler[indx][j] = "#00FF00";
+                            }
+                        }
+                        renderDirectionsPolylines(result, map, renderArray[indx], renkler[indx]);
+                        sleep(1200);
+                        console.log("----hata");
+                        nextRequest();
+                    }
+                }
+
+                function nextRequest(){
+                    indx = indx + 1;
+                    if (indx >= requestArray.length){
+                    //if (indx >= requestArray.length){
+                        return;
+                    }
+                    submitRequest();
+                }
+
+                var polylineOptions = {
+                    strokeColor: '#c1a836',
+                    strokeOpacity: 0.4,
+                    strokeWeight: 3
+                };
+
+                function renderDirectionsPolylines(response, map, rend, renklerDizisi){
+                    var bounds = new google.maps.LatLngBounds();
+                    var legs = response.routes[0].legs;
+                    for (i=0; i<legs.length; i++){
+                        var steps = legs[i].steps;
+                        for (j=0; j<steps.length; j++){
+                            var nextSegment = steps[j].path;
+                            var stepPolyline = new google.maps.Polyline(polylineOptions);
+                            stepPolyline.setOptions({
+                                strokeColor: renklerDizisi[i],
+                                strokeOpacity: 0.7,
+                                strokeWeight: 3.5
+                            });
+                            for (k=0; k<nextSegment.length; k++){
+                                stepPolyline.getPath().push(nextSegment[k]);
+                                bounds.extend(nextSegment[k]);
+                            }
+                            stepPolyline.setMap(map);
+                        }
+                    }
+                }
+                
+
+                //submitRequestUzaklik();
+                //console.log("en dış arada");
+                submitRequest();
+
+
+            }
+
+
+        </script>
+        <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAiLaYpd0zx4HfjULaOVcgxVpQMuKNmD04&callback=initMap">
+        </script>
+    </body>
+</html>
